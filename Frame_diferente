@@ -1,0 +1,52 @@
+import cv2 as cv 
+from datetime import datetime
+from datetime import time
+from time import sleep
+#import pytz
+
+
+rodando = True
+#status, frame = camera.read()
+#aras = ["a","a","a","a","a","a","a","a","a"]
+camera = cv.VideoCapture(0)
+n = 0
+while rodando:
+    
+    aras = []
+    
+    
+
+    status, frame = camera.read()
+    status2,frame2 = camera.read()
+    
+    
+
+    if not status2 or cv.waitKey(1) & 0xff == ord('q'):
+        rodando = False
+    local = datetime.now()
+    local2 = local.strftime("%d/%m/%Y, %H:%M:%S")
+    cv.imshow("Camera" , frame2)
+    
+    #aras.append(local2)
+    if n > 0:
+        difference = cv.subtract( frame ,frame2)
+        # Separa as três cores da imagem
+        b, g, r = cv.split(difference)
+        # TESTE 2: Compara as cores das imagens
+        if cv.countNonZero(b) == 0 and cv.countNonZero(g) == 0 and cv.countNonZero(r) == 0:
+            print("As cores das imagens são iguais")
+        else:
+            print('As cores das imagens são diferentes')
+            cv.imwrite(    "%d.png" %n  , frame2 )
+    
+        #else:
+            #print("As imagens tem tamanhos diferentes")  
+    #cv.imshow(difference)
+    n = n + 1
+   
+    
+
+local = datetime.now()
+local2 = local.strftime("%d/%m/%Y, %H:%M:%S")
+print("Local: " + local2)
+cv.release()
